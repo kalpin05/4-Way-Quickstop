@@ -10,10 +10,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        fuel: resolve(__dirname, 'fuel.html'),
-        store: resolve(__dirname, 'store.html'),
-        food: resolve(__dirname, 'food.html'),
-        location: resolve(__dirname, 'location.html')
+        fuel: resolve(__dirname, 'pages/fuel.html'),
+        store: resolve(__dirname, 'pages/store.html'),
+        food: resolve(__dirname, 'pages/food.html'),
+        location: resolve(__dirname, 'pages/location.html')
       }
     }
   }
