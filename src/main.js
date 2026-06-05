@@ -98,26 +98,26 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
   }
 }
 
-function setupFoodFilters(foodItems) {
+function setupFoodFilters() {
   const searchInput = document.getElementById('food-search');
   const filterContainer = document.getElementById('food-filters');
   
   if (!searchInput || !filterContainer) return;
   
-  let currentCategory = 'all';
-  let currentQuery = '';
+  window.currentFoodCategory = 'all';
+  window.currentFoodQuery = '';
   
   // Search Input listener
   searchInput.addEventListener('input', (e) => {
-    currentQuery = e.target.value;
-    renderFoodItems(foodItems, currentCategory, currentQuery);
+    window.currentFoodQuery = e.target.value;
+    renderFoodItems(window.latestFoodItems || [], window.currentFoodCategory, window.currentFoodQuery);
   });
   
   // Category Buttons listener
   filterContainer.addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON') {
       const btn = e.target;
-      currentCategory = btn.getAttribute('data-filter') || 'all';
+      window.currentFoodCategory = btn.getAttribute('data-filter') || 'all';
       
       // Update active button styling
       filterContainer.querySelectorAll('button').forEach(b => {
@@ -125,7 +125,7 @@ function setupFoodFilters(foodItems) {
       });
       btn.className = 'px-6 py-2 rounded-full text-sm font-bold bg-orange-600 text-white shadow-md transition-all';
       
-      renderFoodItems(foodItems, currentCategory, currentQuery);
+      renderFoodItems(window.latestFoodItems || [], window.currentFoodCategory, window.currentFoodQuery);
     }
   });
 }
@@ -178,6 +178,49 @@ async function fetchWeather() {
   }
 }
 
+async function loadAllData(isInitial = false) {
+  // Store Data
+  try {
+    if (isInitial) console.log('[Main] Fetching Store data...');
+    const storeData = await fetchStoreData();
+    populateDOM(storeData);
+    if (isInitial) setupActionButtons(storeData);
+  } catch (e) {
+    console.error('[Main] Store data load threw an error:', e);
+  }
+
+  // Food page
+  try {
+    const foodContainer = document.getElementById('food-container');
+    if (foodContainer) {
+      if (isInitial) console.log('[Main] Fetching Food data...');
+      const foodItems = await fetchFoodData();
+      window.latestFoodItems = foodItems;
+      renderFoodItems(foodItems, window.currentFoodCategory || 'all', window.currentFoodQuery || '');
+      
+      if (isInitial) setupFoodFilters();
+    }
+  } catch (e) {
+    console.error('[Main] Food data load threw an error:', e);
+  }
+
+  // Deals page
+  try {
+    const dealsContainer = document.getElementById('deals-container');
+    if (dealsContainer) {
+      import('./utils/dataFetcher.js').then(async (mod) => {
+        if (mod.fetchDealsData) {
+          if (isInitial) console.log('[Main] Fetching Deals data...');
+          const deals = await mod.fetchDealsData();
+          renderDealsItems(deals);
+        }
+      });
+    }
+  } catch(e) {
+    console.error('[Main] Deals data load threw an error:', e);
+  }
+}
+
 async function initApp() {
   console.log('[Main] Initializing application...');
   initTheme();
@@ -189,58 +232,17 @@ async function initApp() {
   };
   console.log('[Main] App Debug Tools Available - Call window.debugApp.testGoogleSheets() to test Google Sheets');
 
-  // Fetch + render store + food with very loud diagnostics.
-  // This also ensures DOM population happens even if Google Sheets fails (fallback is handled in fetchers).
-  try {
-    console.log('[Main] Fetching Store data...');
-    const storeData = await fetchStoreData();
-    console.log('[Main] Store data fetched:', storeData);
-
-    populateDOM(storeData);
-    setupActionButtons(storeData);
-  } catch (e) {
-    console.error('[Main] Store data load threw an error (should have fallback inside fetchStoreData):', e);
-  }
-
-  // Food page
-  try {
-    const foodContainer = document.getElementById('food-container');
-    if (foodContainer) {
-      console.log('[Main] Fetching Food data...');
-      const foodItems = await fetchFoodData();
-      console.log('[Main] Food items fetched:', foodItems);
-      // Replace the rendered list entirely to avoid showing stale DOM/cards.
-      renderFoodItems(foodItems);
-      setupFoodFilters(foodItems);
-      // Extra safety: clear any previous cached reference.
-      window.__foodItems = foodItems;
-
-    } else {
-      console.log('[Main] Food container not found on this page');
-    }
-  } catch (e) {
-    console.error('[Main] Food data load threw an error (should have fallback inside fetchFoodData):', e);
-  }
-
-  // Deals page
-  try {
-    const dealsContainer = document.getElementById('deals-container');
-    if (dealsContainer) {
-      // Lazy load fetchDealsData only if we are on deals page to prevent undefined errors if not exported yet
-      import('./utils/dataFetcher.js').then(async (mod) => {
-        if (mod.fetchDealsData) {
-          console.log('[Main] Fetching Deals data...');
-          const deals = await mod.fetchDealsData();
-          renderDealsItems(deals);
-        }
-      });
-    }
-  } catch(e) {
-    console.error('[Main] Deals data load threw an error:', e);
-  }
+  // Load all data immediately
+  await loadAllData(true);
 
   // Weather widget (home page)
   fetchWeather();
+
+  // Set up 30 second polling
+  setInterval(() => {
+    console.log('[Main] Auto-refreshing data from Google Sheets (30s interval)...');
+    loadAllData(false);
+  }, 30000);
 
   console.log('[Main] Application initialization complete');
 }

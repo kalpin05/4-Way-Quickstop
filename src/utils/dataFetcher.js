@@ -182,7 +182,7 @@ export async function fetchFoodData() {
 }
 
 // Paste the published CSV link for your Deals sheet here:
-export const GOOGLE_SHEET_DEALS_CSV_URL = '';
+export const GOOGLE_SHEET_DEALS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS6oLdJORjGZpUT2xWoF-ZOZ4YaDCCd1B2b6v6d0nao7CqvdxSZ_WwiqydfVHthCkUXyPiojkRDhLKE/pub?output=csv';
 
 export async function fetchDealsData() {
   const fallbackDeals = [
