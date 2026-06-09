@@ -135,7 +135,7 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
   let renderedCount = 0;
   foodItems.forEach((item, index) => {
     // Apply filters
-    if (filterCategory !== 'all' && item.category !== filterCategory) return;
+    if (filterCategory !== 'all' && (!item.category || item.category.replace(/[^a-zA-Z0-9 ]/g, '').trim().toLowerCase() !== filterCategory)) return;
     if (query && !item.title.toLowerCase().includes(query) && !item.desc.toLowerCase().includes(query)) return;
     
     renderedCount++;
@@ -388,7 +388,44 @@ function renderStoreProducts(products) {
   });
 }
 
+
+function showOfflineBanner(show) {
+  let banner = document.getElementById('offline-banner');
+  if (show) {
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'offline-banner';
+      banner.className = 'bg-yellow-500 text-yellow-900 px-4 py-2 text-center text-sm font-bold shadow-md relative z-[60] flex justify-between items-center';
+      banner.innerHTML = `
+        <span><span class="mr-2">⚠️</span> You are currently offline. Showing cached menus.</span>
+        <button onclick="this.parentElement.remove()" class="text-yellow-900 hover:text-yellow-700 ml-4 font-bold">✕</button>
+      `;
+      document.body.insertBefore(banner, document.body.firstChild);
+    }
+  } else {
+    if (banner) banner.remove();
+  }
+}
+
+function initHero() {
+  const heroImg = document.querySelector('.animate-slow-zoom');
+  if (!heroImg) return;
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) {
+    heroImg.src = '/images/hero_morning.png';
+  } else if (hour >= 12 && hour < 19) {
+    heroImg.src = '/images/hero_afternoon.png';
+  } else {
+    heroImg.src = '/images/hero_night.png';
+  }
+}
+
 async function initApp() {
+  initHero();
+  window.addEventListener('offline', () => showOfflineBanner(true));
+  window.addEventListener('online', () => showOfflineBanner(false));
+  if (!navigator.onLine) showOfflineBanner(true);
+
   console.log('[Main] Initializing application...');
   initTheme();
 
