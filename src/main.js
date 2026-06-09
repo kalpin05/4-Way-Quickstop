@@ -255,6 +255,72 @@ async function loadAllData(isInitial = false) {
   } catch(e) {
     console.error('[Main] Deals data load threw an error:', e);
   }
+
+  // Store Products page
+  try {
+    const storeProductsContainer = document.getElementById('store-products-container');
+    if (storeProductsContainer) {
+      import('./utils/dataFetcher.js').then(async (mod) => {
+        if (mod.fetchStoreProductsData) {
+          if (isInitial) console.log('[Main] Fetching Store Products data...');
+          const products = await mod.fetchStoreProductsData();
+          renderStoreProducts(products);
+        }
+      });
+    }
+  } catch(e) {
+    console.error('[Main] Store Products data load threw an error:', e);
+  }
+}
+
+function renderStoreProducts(products) {
+  const container = document.getElementById('store-products-container');
+  if (!container) return;
+  
+  const defaultImages = ['/images/coffee.png', '/images/snacks.png', '/images/drinks.png'];
+  container.innerHTML = '';
+  
+  if (!products || products.length === 0) {
+    container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 dark:text-slate-400 text-lg">No products available at the moment.</div>`;
+    return;
+  }
+  
+  products.forEach((product, index) => {
+    let optionsHtml = '';
+    let defaultPrice = '';
+    
+    if (product.flavours && product.flavours.length > 0) {
+      optionsHtml = product.flavours.map((opt, i) => `<option value="${opt.price}">${opt.name}</option>`).join('');
+      defaultPrice = product.flavours[0].price;
+    }
+    
+    const imgSrc = product.imageUrl ? product.imageUrl : defaultImages[index % defaultImages.length];
+    
+    const cardHtml = `
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+        <div class="h-64 overflow-hidden relative">
+          <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/snacks.png'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
+            <h3 class="text-2xl font-bold text-white tracking-wide">${product.name}</h3>
+          </div>
+        </div>
+        <div class="p-6 flex-grow flex flex-col justify-between">
+          <p class="text-slate-600 dark:text-slate-300 mb-4">Select your flavor:</p>
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <select 
+              onchange="document.getElementById('store-price-${index}').innerText = this.value"
+              class="w-full sm:w-auto bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
+            >
+              ${optionsHtml}
+            </select>
+            <span id="store-price-${index}" class="font-extrabold text-2xl text-orange-600">${defaultPrice}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', cardHtml);
+  });
 }
 
 async function initApp() {

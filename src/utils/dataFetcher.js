@@ -7,6 +7,9 @@ const GOOGLE_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR
 // Paste the published CSV link for your new Food Menu sheet here:
 export const GOOGLE_SHEET_FOOD_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTGO64k_feo47mC1u-Tp94ZTnvZAjJZQTE69uNZQVc1M7Vs8oNYWe0wpc8BCx6nDZ2fcgP_EtCRVu2B/pub?output=csv';
 
+// Paste the published CSV link for your new Store Products sheet here:
+export const GOOGLE_SHEET_STORE_PRODUCTS_CSV_URL = '';
+
 function parseCSVLine(line) {
   const result = [];
   let current = '';
@@ -445,5 +448,71 @@ export function populateDOM(data) {
   });
 
   console.log('[PopulateDOM] DOM population complete');
+}
+
+export async function fetchStoreProductsData() {
+  const fallbackProducts = [
+    { name: "Premium Coffee", flavours: [{ name: "Regular", price: "$1.99" }, { name: "Decaf", price: "$1.99" }, { name: "French Vanilla", price: "$2.49" }], imageUrl: "/images/coffee.png" },
+    { name: "Fountain Drink", flavours: [{ name: "Cola", price: "$1.49" }, { name: "Diet Cola", price: "$1.49" }, { name: "Lemon-Lime", price: "$1.49" }], imageUrl: "/images/drinks.png" },
+    { name: "Potato Chips", flavours: [{ name: "Classic", price: "$1.99" }, { name: "BBQ", price: "$1.99" }, { name: "Sour Cream & Onion", price: "$1.99" }], imageUrl: "/images/snacks.png" }
+  ];
+
+  if (!GOOGLE_SHEET_STORE_PRODUCTS_CSV_URL) return fallbackProducts;
+
+  try {
+    const timestamp = new Date().getTime();
+    const fetchUrl = `${GOOGLE_SHEET_STORE_PRODUCTS_CSV_URL}&t=${timestamp}`;
+    const response = await fetch(fetchUrl, { cache: 'no-store' });
+    if (!response.ok) throw new Error('Failed to fetch Store Products Google Sheet');
+    
+    const csvText = await response.text();
+    const rows = csvText.split('\n');
+    const productsMap = new Map();
+    
+    for (let i = 0; i < rows.length; i++) {
+      const rowStr = rows[i].trim();
+      if (!rowStr) continue;
+      
+      const parts = parseCSVLine(rowStr);
+      if (parts.length < 3) continue;
+      
+      const name = parts[0].trim();
+      const flavour = parts[1].trim();
+      let price = parts[2].trim();
+      let imageUrl = parts.length > 3 && parts[3].trim() ? parts[3].trim() : null;
+      
+      if (name.toLowerCase() === 'name' || name === '') continue;
+      
+      if (price && price.toLowerCase() !== 'free' && !price.startsWith('$')) price = '$' + price;
+
+      // Extract real image from Yahoo/Google Search URLs
+      if (imageUrl && imageUrl.includes('imgurl=')) {
+        try {
+          const urlParams = new URLSearchParams(imageUrl.split('?')[1]);
+          if (urlParams.has('imgurl')) {
+            imageUrl = decodeURIComponent(urlParams.get('imgurl'));
+          }
+        } catch (e) {}
+      }
+
+      if (!productsMap.has(name)) {
+        productsMap.set(name, { name, flavours: [], imageUrl: imageUrl });
+      }
+
+      // Append flavour
+      productsMap.get(name).flavours.push({ name: flavour, price: price });
+      
+      // If a later row has an image and the product doesn't, update it
+      if (!productsMap.get(name).imageUrl && imageUrl) {
+        productsMap.get(name).imageUrl = imageUrl;
+      }
+    }
+    
+    const products = Array.from(productsMap.values());
+    return products.length > 0 ? products : fallbackProducts;
+  } catch (error) {
+    console.warn('Error fetching Store Products Google Sheet.', error);
+    return fallbackProducts;
+  }
 }
 
