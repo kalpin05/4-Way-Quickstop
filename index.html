@@ -19,6 +19,20 @@
     <meta name="theme-color" content="#f97316">
 </head>
   <body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300 pb-16 md:pb-0">
+    <!-- Full Screen Loader -->
+    <div id="global-loader" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
+      <div class="animate-pulse mb-6">
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight animate-text-shimmer">
+          4 WAY QUICK STOP
+        </h1>
+      </div>
+      <div class="flex space-x-2">
+        <div class="w-3 h-3 bg-orange-500 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+        <div class="w-3 h-3 bg-orange-500 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+        <div class="w-3 h-3 bg-orange-500 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
+      </div>
+    </div>
+
 
     <!-- Announcement Bar (Hidden by default) -->
     <div id="announcement-bar" class="hidden bg-orange-500 text-white px-4 py-2 text-center text-sm font-bold shadow-md relative z-50 animate-fade-in-up">
@@ -57,19 +71,8 @@
     </header>
     <!-- Gas Price Marquee -->
     <div class="bg-black text-green-500 overflow-hidden py-1.5 border-b-2 border-slate-800">
-      <div class="animate-marquee text-sm font-mono font-bold uppercase tracking-widest space-x-12">
-        <span>⛽ UNLEADED: <span data-bind="fuel.regular">--</span></span>
-        <span>⚡ PREMIUM: <span data-bind="fuel.premium">--</span></span>
-        <span>🚚 DIESEL: <span data-bind="fuel.diesel">--</span></span>
-        <span class="text-yellow-400">🎉 SNEAD LIQUOIR STORE (OPENING SOON)</span>
-        <span>⛽ UNLEADED: <span data-bind="fuel.regular">--</span></span>
-        <span>⚡ PREMIUM: <span data-bind="fuel.premium">--</span></span>
-        <span>🚚 DIESEL: <span data-bind="fuel.diesel">--</span></span>
-        <span class="text-yellow-400">🎉 SNEAD LIQUOIR STORE (OPENING SOON)</span>
-        <span>⛽ UNLEADED: <span data-bind="fuel.regular">--</span></span>
-        <span>⚡ PREMIUM: <span data-bind="fuel.premium">--</span></span>
-        <span>🚚 DIESEL: <span data-bind="fuel.diesel">--</span></span>
-        <span class="text-yellow-400">🎉 SNEAD LIQUOIR STORE (OPENING SOON)</span>
+      <div id="dynamic-marquee" class="animate-marquee text-sm font-mono font-bold uppercase tracking-widest space-x-12">
+        <!-- Javascript will inject dynamic fuel prices and announcements here -->
       </div>
     </div>
 

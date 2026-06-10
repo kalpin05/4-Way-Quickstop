@@ -280,12 +280,20 @@ async function fetchWeather() {
 }
 
 async function loadAllData(isInitial = false) {
+  if (isInitial) window.loaderStartTime = Date.now();
   // Store Data
   try {
     if (isInitial) console.log('[Main] Fetching Store data...');
     const storeData = await fetchStoreData();
     populateDOM(storeData);
     if (isInitial) setupActionButtons(storeData);
+    
+    // Dynamic Fuel Logic
+    updateDynamicMarquee(storeData);
+    const fuelContainer = document.getElementById('fuel-container');
+    if (fuelContainer) {
+      renderFuelItems(storeData);
+    }
   } catch (e) {
     console.error('[Main] Store data load threw an error:', e);
   }
@@ -336,6 +344,87 @@ async function loadAllData(isInitial = false) {
   } catch(e) {
     console.error('[Main] Store Products data load threw an error:', e);
   }
+
+  if (isInitial) {
+    const elapsed = Date.now() - window.loaderStartTime;
+    const remaining = Math.max(0, 1000 - elapsed);
+    setTimeout(() => {
+      const loader = document.getElementById('global-loader');
+      if (loader) {
+        loader.classList.add('opacity-0');
+        setTimeout(() => loader.remove(), 700);
+      }
+    }, remaining);
+  }
+}
+
+function updateDynamicMarquee(storeData) {
+  const marquee = document.getElementById('dynamic-marquee');
+  if (!marquee || !storeData.fuelList || storeData.fuelList.length === 0) return;
+
+  // We want to loop the content a few times so the marquee scrolls smoothly
+  let contentHtml = '';
+  
+  for (let i = 0; i < 4; i++) {
+    storeData.fuelList.forEach(fuel => {
+      let icon = '⛽';
+      if (fuel.id.toLowerCase() === 'premium') icon = '⚡';
+      if (fuel.id.toLowerCase() === 'diesel') icon = '🚚';
+      
+      const isOutOfStock = fuel.status.toLowerCase().includes('out of stock');
+      const displayPrice = isOutOfStock ? '<span class="text-red-500 line-through">' + fuel.price + '</span> <span class="text-red-500 font-bold ml-1">OUT OF STOCK</span>' : fuel.price;
+
+      contentHtml += `<span>${icon} ${fuel.id.toUpperCase()}: <span class="text-green-400">${displayPrice}</span></span>`;
+    });
+    contentHtml += `<span class="text-yellow-400">🎉 SNEAD LIQUOIR STORE (OPENING SOON)</span>`;
+  }
+  marquee.innerHTML = contentHtml;
+}
+
+function renderFuelItems(storeData) {
+  const container = document.getElementById('fuel-container');
+  if (!container) return;
+
+  if (!storeData.fuelList || storeData.fuelList.length === 0) {
+    container.innerHTML = '<p class="text-center text-slate-400 col-span-full">Loading fuel rates...</p>';
+    return;
+  }
+
+  container.innerHTML = storeData.fuelList.map((fuel) => {
+    let colorClass = 'text-green-400';
+    let label = '87 Octane';
+    let extraHTML = '';
+    let containerClasses = 'glass-panel rounded-2xl p-8 text-center transition-transform transform hover:-translate-y-2 hover:shadow-2xl relative overflow-hidden';
+
+    if (fuel.id.toLowerCase() === 'premium') {
+      colorClass = 'text-orange-500';
+      label = '93 Octane';
+      containerClasses = 'bg-gradient-to-b from-slate-800 to-slate-900 rounded-2xl p-8 border border-orange-500/50 text-center shadow-[0_0_20px_rgba(249,115,22,0.15)] transition-transform transform md:-translate-y-4 hover:-translate-y-6 hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] relative overflow-hidden';
+      extraHTML = `<div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-600 text-white px-6 py-1.5 rounded-full text-sm font-bold uppercase tracking-widest shadow-lg">Top Tier</div>`;
+    } else if (fuel.id.toLowerCase() === 'diesel') {
+      colorClass = 'text-blue-400';
+      label = 'Ultra-Low Sulfur';
+    } else if (fuel.id.toLowerCase() === 'regular') {
+      label = '87 Octane';
+    } else {
+      label = 'Premium Fuel';
+    }
+
+    const isOutOfStock = fuel.status.toLowerCase().includes('out of stock');
+    if (isOutOfStock) {
+      colorClass = 'text-slate-500 line-through';
+      extraHTML += `<div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm flex flex-col items-center justify-center z-10"><span class="text-3xl font-extrabold text-red-500 tracking-widest uppercase border-4 border-red-500 p-2 rounded-xl -rotate-12 bg-slate-900 shadow-2xl">Out of Stock</span></div>`;
+    }
+
+    return `
+      <div class="${containerClasses}">
+        ${extraHTML}
+        <h3 class="text-2xl font-bold text-slate-300 uppercase tracking-wide mb-2 ${fuel.id.toLowerCase() === 'premium' ? 'mt-4 text-white' : ''}">${fuel.id}</h3>
+        <p class="text-sm text-slate-500 mb-8 uppercase tracking-widest font-semibold">${label}</p>
+        <div class="text-6xl font-extrabold ${colorClass}">${fuel.price}</div>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderStoreProducts(products) {

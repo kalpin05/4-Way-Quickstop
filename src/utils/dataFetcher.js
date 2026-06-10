@@ -345,6 +345,7 @@ function setNestedValue(obj, path, value) {
 function parseCSV(csvText) {
   // Start with a copy of the fallback data so missing fields are still populated
   const data = JSON.parse(JSON.stringify(fallbackData));
+  data.fuelList = [];
 
   // Split into rows and process
   const rows = csvText.split('\n');
@@ -355,20 +356,25 @@ function parseCSV(csvText) {
     const trimmedRow = rows[i].trim();
     if (!trimmedRow) continue; // Skip empty rows
 
-    const columns = rows[i].split(',');
+    const columns = parseCSVLine(trimmedRow);
     if (columns.length < 2) {
       console.log(`[ParseCSV] Row ${i} skipped (insufficient columns):`, trimmedRow);
       continue;
     }
 
     let key = columns[0].trim();
-    const value = columns.slice(1).join(',').trim(); // Re-join in case value had commas
+    const value = escapeHTML(columns[1]);
+    const status = columns.length > 2 ? escapeHTML(columns[2]) : "In Stock";
 
     // Automatically fix common typos like "fuel.premiun" -> "fuel.premium"
     if (key === 'fuel.premiun') key = 'fuel.premium';
 
     if (key && key.toLowerCase() !== 'key') {
       // Skip header row
+      if (key.startsWith('fuel.')) {
+        const type = key.split('.')[1];
+        data.fuelList.push({ id: type, price: value, status: status });
+      }
       setNestedValue(data, key, value);
       console.log(`[ParseCSV] Row ${i}: ${key} = ${value}`);
       parsedCount++;
