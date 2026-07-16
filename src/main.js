@@ -159,7 +159,7 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
 
     const imgSrc = item.imageUrl ? item.imageUrl : images[index % images.length];
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${renderedCount * 0.05}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${renderedCount * 0.05}s">
         <div class="h-56 overflow-hidden relative">
           <img src="${imgSrc}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/burger.png'" />
         </div>
@@ -178,6 +178,7 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
   if (renderedCount === 0) {
     foodContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 dark:text-slate-400 text-lg">No items found matching your search.</div>`;
   }
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
 function setupFoodFilters() {
@@ -460,7 +461,7 @@ function renderStoreProducts(products) {
     const imgSrc = product.imageUrl ? product.imageUrl : defaultImages[index % defaultImages.length];
     
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s">
         <div class="h-64 overflow-hidden relative">
           <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/snacks.png'" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
@@ -484,6 +485,7 @@ function renderStoreProducts(products) {
     
     container.insertAdjacentHTML('beforeend', cardHtml);
   });
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
 
@@ -579,7 +581,7 @@ function renderDealsItems(deals) {
   deals.forEach((deal, index) => {
     const imgSrc = deal.imageUrl || '/images/tenders.png'; // Fallback
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s">
         <div class="h-56 overflow-hidden relative group">
           <img src="${imgSrc}" alt="${deal.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='/images/sandwich.png'" />
           <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full font-bold shadow-md animate-pulse">HOT DEAL</div>
@@ -598,9 +600,30 @@ function renderDealsItems(deals) {
     `;
     container.insertAdjacentHTML('beforeend', cardHtml);
   });
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+window.initScrollAnimations = function() {
+  if (!window.scrollObserver) {
+    window.scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+          window.scrollObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+  }
+
+  document.querySelectorAll('.reveal-on-scroll:not(.reveal-active)').forEach(el => {
+    window.scrollObserver.observe(el);
+  });
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+  window.initScrollAnimations();
+});
 
 // Register Service Worker for background syncing and PWA offline capabilities
 if ('serviceWorker' in navigator) {
