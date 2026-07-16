@@ -73,3 +73,35 @@ body {
   background-clip: text;
   animation: text-shimmer 2s linear infinite;
 }
+
+/* Theme Toggle Fluidity */
+#theme-toggle .theme-icon-dark {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+#theme-toggle .theme-icon-light {
+  opacity: 0;
+  transform: rotate(90deg) scale(0);
+}
+#theme-toggle.is-dark .theme-icon-dark {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0);
+}
+#theme-toggle.is-dark .theme-icon-light {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+/* Custom Dropdown Animation */
+.custom-dropdown-menu {
+  transform-origin: top;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  opacity: 0;
+  transform: scaleY(0.95);
+  pointer-events: none;
+}
+.custom-dropdown-menu.show {
+  opacity: 1;
+  transform: scaleY(1);
+  pointer-events: auto;
+}
