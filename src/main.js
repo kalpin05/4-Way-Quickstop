@@ -14,15 +14,14 @@ function initTheme() {
     (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
     document.documentElement.classList.add('dark');
-    lightIcon.classList.remove('hidden');
+    toggleBtn.classList.add('is-dark');
   } else {
     document.documentElement.classList.remove('dark');
-    darkIcon.classList.remove('hidden');
+    toggleBtn.classList.remove('is-dark');
   }
 
   toggleBtn.addEventListener('click', function () {
-    darkIcon.classList.toggle('hidden');
-    lightIcon.classList.toggle('hidden');
+    toggleBtn.classList.toggle('is-dark');
 
     if (localStorage.getItem('color-theme')) {
       if (localStorage.getItem('color-theme') === 'light') {
@@ -146,12 +145,18 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
       let optionsHtml = item.options.map(opt => `<option value="${opt.price}">${opt.name}</option>`).join('');
       priceHtml = `
         <div class="flex items-center gap-3">
-          <select 
-            onchange="document.getElementById('price-${index}').innerText = this.value"
-            class="bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
-          >
-            ${optionsHtml}
-          </select>
+          <div class="relative custom-dropdown-container">
+            <button 
+              type="button" 
+              class="custom-dropdown-btn flex items-center justify-between min-w-[120px] bg-slate-100 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer shadow-sm transition-colors backdrop-blur-md"
+            >
+              <span class="dropdown-selected-text">${item.options[0].name}</span>
+              <svg class="w-4 h-4 ml-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="custom-dropdown-menu absolute z-50 mt-2 w-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl backdrop-blur-xl overflow-hidden">
+              ${item.options.map(opt => `<div class="dropdown-item px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-slate-700 cursor-pointer transition-colors" data-price="${opt.price}" data-target="price-${index}">${opt.name}</div>`).join('')}
+            </div>
+          </div>
           <span id="price-${index}" class="font-extrabold text-3xl text-orange-600">${item.options[0].price}</span>
         </div>
       `;
@@ -159,7 +164,7 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
 
     const imgSrc = item.imageUrl ? item.imageUrl : images[index % images.length];
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${renderedCount * 0.05}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${renderedCount * 0.05}s">
         <div class="h-56 overflow-hidden relative">
           <img src="${imgSrc}" alt="${item.title}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/burger.png'" />
         </div>
@@ -178,6 +183,7 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
   if (renderedCount === 0) {
     foodContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 dark:text-slate-400 text-lg">No items found matching your search.</div>`;
   }
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
 function setupFoodFilters() {
@@ -460,7 +466,7 @@ function renderStoreProducts(products) {
     const imgSrc = product.imageUrl ? product.imageUrl : defaultImages[index % defaultImages.length];
     
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s">
         <div class="h-64 overflow-hidden relative">
           <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/snacks.png'" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
@@ -470,12 +476,18 @@ function renderStoreProducts(products) {
         <div class="p-6 flex-grow flex flex-col justify-between">
           <p class="text-slate-600 dark:text-slate-300 mb-4">Select your flavor:</p>
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <select 
-              onchange="document.getElementById('store-price-${index}').innerText = this.value"
-              class="w-full sm:w-auto bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
-            >
-              ${optionsHtml}
-            </select>
+            <div class="relative custom-dropdown-container w-full sm:w-auto">
+              <button 
+                type="button" 
+                class="custom-dropdown-btn flex items-center justify-between w-full sm:min-w-[140px] bg-slate-100 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer shadow-sm transition-colors backdrop-blur-md"
+              >
+                <span class="dropdown-selected-text">${product.flavours[0].name}</span>
+                <svg class="w-4 h-4 ml-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div class="custom-dropdown-menu absolute z-50 mt-2 w-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl backdrop-blur-xl overflow-hidden">
+                ${product.flavours.map(opt => `<div class="dropdown-item px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-slate-700 cursor-pointer transition-colors" data-price="${opt.price}" data-target="store-price-${index}">${opt.name}</div>`).join('')}
+              </div>
+            </div>
             <span id="store-price-${index}" class="font-extrabold text-2xl text-orange-600">${defaultPrice}</span>
           </div>
         </div>
@@ -484,6 +496,7 @@ function renderStoreProducts(products) {
     
     container.insertAdjacentHTML('beforeend', cardHtml);
   });
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
 
@@ -579,7 +592,7 @@ function renderDealsItems(deals) {
   deals.forEach((deal, index) => {
     const imgSrc = deal.imageUrl || '/images/tenders.png'; // Fallback
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s">
         <div class="h-56 overflow-hidden relative group">
           <img src="${imgSrc}" alt="${deal.title}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='/images/sandwich.png'" />
           <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full font-bold shadow-md animate-pulse">HOT DEAL</div>
@@ -598,9 +611,86 @@ function renderDealsItems(deals) {
     `;
     container.insertAdjacentHTML('beforeend', cardHtml);
   });
+  if (window.initScrollAnimations) window.initScrollAnimations();
 }
 
-document.addEventListener('DOMContentLoaded', initApp);
+window.initScrollAnimations = function() {
+  if (!window.scrollObserver) {
+    window.scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal-active');
+          window.scrollObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+  }
+
+  document.querySelectorAll('.reveal-on-scroll:not(.reveal-active)').forEach(el => {
+    window.scrollObserver.observe(el);
+  });
+};
+
+window.initMagneticButtons = function() {
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px)';
+    });
+  });
+};
+
+function initCustomDropdowns() {
+  document.addEventListener('click', (e) => {
+    // Handle dropdown toggle
+    const btn = e.target.closest('.custom-dropdown-btn');
+    if (btn) {
+      const menu = btn.nextElementSibling;
+      const isShowing = menu.classList.contains('show');
+      
+      // Close all others
+      document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('show'));
+      
+      if (!isShowing) {
+        menu.classList.add('show');
+      }
+      return;
+    }
+    
+    // Handle item selection
+    const item = e.target.closest('.dropdown-item');
+    if (item) {
+      const price = item.getAttribute('data-price');
+      const targetId = item.getAttribute('data-target');
+      const container = item.closest('.custom-dropdown-container');
+      const selectedText = container.querySelector('.dropdown-selected-text');
+      const menu = container.querySelector('.custom-dropdown-menu');
+      
+      if (document.getElementById(targetId)) {
+        document.getElementById(targetId).innerText = price;
+      }
+      selectedText.innerText = item.innerText;
+      menu.classList.remove('show');
+      return;
+    }
+    
+    // Click outside
+    document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('show'));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+  window.initScrollAnimations();
+  window.initMagneticButtons();
+  initCustomDropdowns();
+});
 
 // Register Service Worker for background syncing and PWA offline capabilities
 if ('serviceWorker' in navigator) {

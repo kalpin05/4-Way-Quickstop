@@ -17,11 +17,20 @@
     <meta property="og:type" content="website">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#f97316">
-</head>
+
+    <!-- Prevent Theme Flicker -->
+    <script>
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
   <body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300 pb-16 md:pb-0">
 
     <!-- Announcement Bar (Hidden by default) -->
-    <div id="announcement-bar" class="hidden bg-orange-500 text-white px-4 py-2 text-center text-sm font-bold shadow-md relative z-50 animate-fade-in-up">
+    <div id="announcement-bar" class="hidden bg-orange-500 text-white px-4 py-2 text-center text-sm font-bold shadow-md relative z-50 reveal-on-scroll">
       <span data-bind="announcement"></span>
     </div>
 
@@ -40,11 +49,11 @@
             <a href="/pages/location.html" class="text-slate-300 hover:text-white transition-colors font-semibold">Location</a>
           </nav>
           <div class="flex items-center space-x-4">
-            <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-700 transition-colors focus:outline-none" aria-label="Toggle Dark Mode">
-              <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <button id="theme-toggle" class="relative p-2 rounded-full hover:bg-slate-700 transition-colors focus:outline-none w-9 h-9 flex items-center justify-center overflow-hidden" aria-label="Toggle Dark Mode">
+              <svg id="theme-toggle-dark-icon" class="absolute w-5 h-5 text-white transition-all duration-500 transform theme-icon-dark" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
               </svg>
-              <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <svg id="theme-toggle-light-icon" class="absolute w-5 h-5 text-white transition-all duration-500 transform theme-icon-light" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4.22 4.22a1 1 0 011.415 0l.708.708a1 1 0 01-1.414 1.414l-.708-.708a1 1 0 010-1.414zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zm-4.22 4.22a1 1 0 010 1.415l-.708.708a1 1 0 01-1.414-1.414l.708-.708a1 1 0 011.415 0zM10 16a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm-4.22-4.22a1 1 0 010-1.415l-.708-.708a1 1 0 01-1.414 1.414l.708.708a1 1 0 011.415 0zM2 10a1 1 0 011-1h1a1 1 0 110 2H3a1 1 0 01-1-1zm4.22-4.22a1 1 0 011.415 0l.708.708a1 1 0 01-1.414 1.414l-.708-.708a1 1 0 010-1.414zM10 5a5 5 0 100 10 5 5 0 000-10z" fill-rule="evenodd" clip-rule="evenodd"></path>
               </svg>
             </button>

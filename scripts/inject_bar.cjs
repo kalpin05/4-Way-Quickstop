@@ -5,7 +5,7 @@ const files = ['index.html', 'fuel.html', 'store.html', 'location.html', 'food.h
 
 const announcementHtml = `
     <!-- Announcement Bar (Hidden by default) -->
-    <div id="announcement-bar" class="hidden bg-orange-500 text-white px-4 py-2 text-center text-sm font-bold shadow-md relative z-50 animate-fade-in-up">
+    <div id="announcement-bar" class="hidden bg-orange-500 text-white px-4 py-2 text-center text-sm font-bold shadow-md relative z-50 reveal-on-scroll">
       <span data-bind="announcement"></span>
     </div>
 `;
