@@ -14,15 +14,14 @@ function initTheme() {
     (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
     document.documentElement.classList.add('dark');
-    lightIcon.classList.remove('hidden');
+    toggleBtn.classList.add('is-dark');
   } else {
     document.documentElement.classList.remove('dark');
-    darkIcon.classList.remove('hidden');
+    toggleBtn.classList.remove('is-dark');
   }
 
   toggleBtn.addEventListener('click', function () {
-    darkIcon.classList.toggle('hidden');
-    lightIcon.classList.toggle('hidden');
+    toggleBtn.classList.toggle('is-dark');
 
     if (localStorage.getItem('color-theme')) {
       if (localStorage.getItem('color-theme') === 'light') {
@@ -146,12 +145,18 @@ function renderFoodItems(foodItems, filterCategory = 'all', searchQuery = '') {
       let optionsHtml = item.options.map(opt => `<option value="${opt.price}">${opt.name}</option>`).join('');
       priceHtml = `
         <div class="flex items-center gap-3">
-          <select 
-            onchange="document.getElementById('price-${index}').innerText = this.value"
-            class="bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
-          >
-            ${optionsHtml}
-          </select>
+          <div class="relative custom-dropdown-container">
+            <button 
+              type="button" 
+              class="custom-dropdown-btn flex items-center justify-between min-w-[120px] bg-slate-100 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-1.5 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer shadow-sm transition-colors backdrop-blur-md"
+            >
+              <span class="dropdown-selected-text">${item.options[0].name}</span>
+              <svg class="w-4 h-4 ml-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div class="custom-dropdown-menu absolute z-50 mt-2 w-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl backdrop-blur-xl overflow-hidden">
+              ${item.options.map(opt => `<div class="dropdown-item px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-slate-700 cursor-pointer transition-colors" data-price="${opt.price}" data-target="price-${index}">${opt.name}</div>`).join('')}
+            </div>
+          </div>
           <span id="price-${index}" class="font-extrabold text-3xl text-orange-600">${item.options[0].price}</span>
         </div>
       `;
@@ -471,12 +476,18 @@ function renderStoreProducts(products) {
         <div class="p-6 flex-grow flex flex-col justify-between">
           <p class="text-slate-600 dark:text-slate-300 mb-4">Select your flavor:</p>
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <select 
-              onchange="document.getElementById('store-price-${index}').innerText = this.value"
-              class="w-full sm:w-auto bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer"
-            >
-              ${optionsHtml}
-            </select>
+            <div class="relative custom-dropdown-container w-full sm:w-auto">
+              <button 
+                type="button" 
+                class="custom-dropdown-btn flex items-center justify-between w-full sm:min-w-[140px] bg-slate-100 dark:bg-slate-700/50 text-slate-800 dark:text-white border border-slate-300 dark:border-slate-600 rounded-lg px-3 py-2 text-sm font-semibold focus:ring-2 focus:ring-orange-500 outline-none cursor-pointer shadow-sm transition-colors backdrop-blur-md"
+              >
+                <span class="dropdown-selected-text">${product.flavours[0].name}</span>
+                <svg class="w-4 h-4 ml-2 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+              </button>
+              <div class="custom-dropdown-menu absolute z-50 mt-2 w-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 rounded-lg shadow-xl backdrop-blur-xl overflow-hidden">
+                ${product.flavours.map(opt => `<div class="dropdown-item px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-orange-50 dark:hover:bg-slate-700 cursor-pointer transition-colors" data-price="${opt.price}" data-target="store-price-${index}">${opt.name}</div>`).join('')}
+              </div>
+            </div>
             <span id="store-price-${index}" class="font-extrabold text-2xl text-orange-600">${defaultPrice}</span>
           </div>
         </div>
@@ -620,9 +631,65 @@ window.initScrollAnimations = function() {
   });
 };
 
+window.initMagneticButtons = function() {
+  document.querySelectorAll('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+    });
+    
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = 'translate(0px, 0px)';
+    });
+  });
+};
+
+function initCustomDropdowns() {
+  document.addEventListener('click', (e) => {
+    // Handle dropdown toggle
+    const btn = e.target.closest('.custom-dropdown-btn');
+    if (btn) {
+      const menu = btn.nextElementSibling;
+      const isShowing = menu.classList.contains('show');
+      
+      // Close all others
+      document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('show'));
+      
+      if (!isShowing) {
+        menu.classList.add('show');
+      }
+      return;
+    }
+    
+    // Handle item selection
+    const item = e.target.closest('.dropdown-item');
+    if (item) {
+      const price = item.getAttribute('data-price');
+      const targetId = item.getAttribute('data-target');
+      const container = item.closest('.custom-dropdown-container');
+      const selectedText = container.querySelector('.dropdown-selected-text');
+      const menu = container.querySelector('.custom-dropdown-menu');
+      
+      if (document.getElementById(targetId)) {
+        document.getElementById(targetId).innerText = price;
+      }
+      selectedText.innerText = item.innerText;
+      menu.classList.remove('show');
+      return;
+    }
+    
+    // Click outside
+    document.querySelectorAll('.custom-dropdown-menu').forEach(m => m.classList.remove('show'));
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initApp();
   window.initScrollAnimations();
+  window.initMagneticButtons();
+  initCustomDropdowns();
 });
 
 // Register Service Worker for background syncing and PWA offline capabilities
