@@ -578,6 +578,9 @@ async function initApp() {
   // Weather widget (home page)
   fetchWeather();
 
+  // Initialize interactive map if container exists (Location page)
+  initLocationMap();
+
   // Set up 5 minute polling
   setInterval(() => {
     console.log('[Main] Auto-refreshing data from Google Sheets (5m interval)...');
@@ -585,6 +588,46 @@ async function initApp() {
   }, 300000);
 
   console.log('[Main] Application initialization complete');
+}
+
+function initLocationMap() {
+  const mapContainer = document.getElementById('interactive-map');
+  if (!mapContainer || typeof L === 'undefined') return;
+  
+  // Coordinates for Joppa, AL (example)
+  const lat = 34.2982;
+  const lng = -86.5583;
+  
+  const map = L.map('interactive-map', {
+    zoomControl: false,
+    scrollWheelZoom: false
+  }).setView([lat, lng], 15);
+
+  // Dark mode tile layer (CartoDB Dark Matter)
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors',
+    subdomains: 'abcd',
+    maxZoom: 20
+  }).addTo(map);
+
+  // Custom marker
+  const markerHtml = `
+    <div style="background-color: #f97316; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 15px rgba(249, 115, 22, 0.8);"></div>
+  `;
+  const customIcon = L.divIcon({
+    html: markerHtml,
+    className: '',
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+
+  L.marker([lat, lng], {icon: customIcon}).addTo(map)
+    .bindPopup('<b style="color: #f97316;">4-Way Quick Stop</b><br>Your express roadside stop.')
+    .openPopup();
+    
+  L.control.zoom({
+    position: 'bottomright'
+  }).addTo(map);
 }
 
 function renderDealsItems(deals) {
