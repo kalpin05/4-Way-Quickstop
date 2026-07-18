@@ -68,8 +68,14 @@
     <!-- Content Area Placeholder -->
     
     <!-- Component C: Live Fuel Rates Matrix -->
-    <section id="fuel" class="py-20 bg-slate-900 min-h-[calc(100vh-200px)]">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="fuel" class="relative py-20 bg-slate-900 min-h-[calc(100vh-200px)] overflow-hidden">
+      <!-- Full screen background image -->
+      <div class="absolute inset-0 z-0 pointer-events-none">
+        <img src="/images/fuel_bg.png" alt="Fuel Station Night Background" class="w-full h-full object-cover opacity-40 animate-slow-zoom" />
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px]"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-16 reveal-on-scroll">
           <h2 class="text-4xl font-extrabold text-white tracking-tight mb-4">Current Fuel Services</h2>
           <p class="text-xl text-slate-400">Premium grades for all vehicle types.</p>
@@ -82,7 +88,7 @@
     </section>
 
 
-    <footer class="bg-slate-900 pt-12 pb-8 border-t border-slate-800">
+    <footer class="bg-slate-900 pt-12 pb-8 border-t border-slate-800 relative z-20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
           <div class="mb-4 md:mb-0">
