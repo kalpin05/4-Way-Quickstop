@@ -469,14 +469,14 @@ function renderStoreProducts(products) {
     const imgSrc = product.imageUrl ? product.imageUrl : defaultImages[index % defaultImages.length];
     
     const cardHtml = `
-      <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s">
+      <div class="store-card bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg border border-slate-100 dark:border-slate-700 flex flex-col transition-all transform hover:-translate-y-2 hover:shadow-2xl reveal-on-scroll" style="transition-delay: ${index * 0.1}s;">
         <div class="h-64 overflow-hidden relative">
           <img src="${imgSrc}" alt="${product.name}" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110" onerror="this.src='/images/snacks.png'" />
           <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent flex items-end p-6">
             <h3 class="text-2xl font-bold text-white tracking-wide">${product.name}</h3>
           </div>
         </div>
-        <div class="p-6 flex-grow flex flex-col justify-between">
+        <div class="p-6 flex-grow flex flex-col justify-between relative z-10">
           <p class="text-slate-600 dark:text-slate-300 mb-4">Select your flavor:</p>
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div class="relative custom-dropdown-container w-full sm:w-auto">
