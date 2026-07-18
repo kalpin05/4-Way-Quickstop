@@ -27,9 +27,9 @@
       }
     </script>
   </head>
-  <body class="bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300 pb-16 md:pb-0">
+  <body class="bg-orange-50 dark:bg-indigo-950 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-300 pb-16 md:pb-0">
     <!-- Full Screen Loader -->
-    <div id="global-loader" class="fixed inset-0 z-[100] bg-slate-950 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
+    <div id="global-loader" class="fixed inset-0 z-[100] bg-indigo-950 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out">
       <div class="animate-pulse mb-6">
         <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight animate-text-shimmer">
           4 WAY QUICK STOP
@@ -49,7 +49,7 @@
     </div>
 
     <!-- Component A: Sticky Global Header -->
-    <header class="sticky top-0 z-50 bg-slate-900 text-white shadow-md">
+    <header class="sticky top-0 z-50 bg-indigo-950 text-white shadow-md border-b border-indigo-900/50">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <div class="flex-shrink-0 flex items-center">
@@ -79,8 +79,8 @@
       </div>
     </header>
     <!-- Gas Price Marquee -->
-    <div class="bg-black text-green-500 overflow-hidden py-1.5 border-b-2 border-slate-800">
-      <div id="dynamic-marquee" class="animate-marquee text-sm font-mono font-bold uppercase tracking-widest space-x-12">
+    <div class="bg-black text-green-500 overflow-hidden py-3 border-b-2 border-indigo-900/50">
+      <div id="dynamic-marquee" class="animate-marquee text-lg font-mono font-bold uppercase tracking-widest space-x-12">
         <!-- Javascript will inject dynamic fuel prices and announcements here -->
       </div>
     </div>
@@ -89,32 +89,32 @@
     <!-- Content Area Placeholder -->
     
     <!-- Component B: Hero -->
-    <section class="relative bg-slate-900 text-white min-h-[calc(100vh-64px)] overflow-hidden flex items-center justify-center lg:justify-start">
+    <section class="relative bg-indigo-950 text-white min-h-[calc(100vh-64px)] overflow-hidden flex items-center justify-center lg:justify-start">
       <!-- Full screen background image -->
       <div class="absolute inset-0 z-0">
-        <img src="/images/hero.png" alt="Express Roadside Stop at Sunset" class="w-full h-full object-cover opacity-80 animate-slow-zoom" />
-        <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/70 to-transparent"></div>
+        <img src="/images/hero.png" alt="Express Roadside Stop at Sunset" class="w-full h-full object-cover opacity-70 mix-blend-overlay animate-slow-zoom" />
+        <div class="absolute inset-0 bg-gradient-to-r from-indigo-950 via-indigo-950/80 to-orange-900/40"></div>
       </div>
       
       <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full reveal-on-scroll">
         <div class="flex flex-col lg:flex-row gap-8 items-start lg:items-center">
-          <div class="glass-panel p-10 md:p-14 rounded-2xl lg:w-2/3 border border-slate-700/50 shadow-2xl backdrop-blur-md">
+          <div class="glass-panel p-10 md:p-14 rounded-2xl lg:w-2/3 border border-indigo-500/20 shadow-[0_0_40px_rgba(79,70,229,0.15)] backdrop-blur-md">
             <h1 class="text-5xl md:text-6xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-6 leading-tight drop-shadow-md">
               Fuel Up.<br>
-              <span class="text-orange-500">Grab Snacks.</span><br>
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600 dark:from-orange-400 dark:via-pink-500 dark:to-purple-500 drop-shadow-sm">Grab Snacks.</span><br>
               Eat Fresh.
             </h1>
-            <p class="text-xl md:text-2xl text-slate-700 dark:text-slate-200 mb-10 max-w-2xl font-medium drop-shadow">
-              Welcome to <span data-bind="businessName" class="font-bold text-white">...</span>. The modern standard for your journey.
+            <p class="text-xl md:text-2xl text-slate-700 dark:text-indigo-100 mb-10 max-w-2xl font-medium drop-shadow">
+              Welcome to <span data-bind="businessName" class="font-bold text-slate-900 dark:text-white">...</span>. The modern standard for your journey.
             </p>
             <div class="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
-              <a href="#" data-action="route" class="magnetic bg-orange-600 hover:bg-orange-500 text-white px-8 py-4 rounded-xl font-bold shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-transform duration-200 transform text-center flex-1 sm:flex-none">
+              <a href="#" data-action="route" class="magnetic bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-400 hover:to-pink-500 text-white px-8 py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(236,72,153,0.4)] transition-transform duration-200 transform text-center flex-1 sm:flex-none">
                 Get Directions
               </a>
-              <a href="#" data-action="call" class="magnetic bg-green-600 hover:bg-green-500 text-white px-8 py-4 rounded-xl font-bold shadow-[0_0_15px_rgba(22,163,74,0.4)] transition-transform duration-200 transform text-center flex-1 sm:flex-none flex items-center justify-center">
+              <a href="#" data-action="call" class="magnetic bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-8 py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(147,51,234,0.4)] transition-transform duration-200 transform text-center flex-1 sm:flex-none flex items-center justify-center">
                 <span class="mr-2">📞</span> Call to Order
               </a>
-              <a href="/pages/food.html" class="magnetic bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg transition-transform duration-200 transform text-center flex-1 sm:flex-none backdrop-blur-sm">
+              <a href="/pages/food.html" class="magnetic bg-slate-900/90 dark:bg-white/10 hover:bg-slate-800 dark:hover:bg-white/20 border border-slate-700 dark:border-white/20 text-white px-8 py-4 rounded-xl font-bold shadow-lg transition-transform duration-200 transform text-center flex-1 sm:flex-none backdrop-blur-sm">
                 View Menu
               </a>
             </div>
@@ -141,19 +141,20 @@
 
 
     <!-- Component: Our Roots -->
-    <section class="py-20 bg-white dark:bg-slate-800 reveal-on-scroll">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-20 bg-white dark:bg-indigo-950/50 reveal-on-scroll relative">
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-orange-50/50 dark:to-indigo-900/20 pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="lg:flex lg:items-center lg:justify-between">
           <div class="lg:w-1/2">
-            <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl">Our Local Roots</h2>
-            <p class="mt-4 text-lg text-slate-600 dark:text-slate-300">
+            <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white sm:text-4xl"><span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Our Local</span> Roots</h2>
+            <p class="mt-4 text-lg text-slate-600 dark:text-indigo-200">
               We aren't a massive corporate chain. We are a locally owned and operated stop dedicated to serving the community and travelers with the absolute best. When you stop here, you're getting fresh coffee, clean facilities, and service with a smile from people who care.
             </p>
           </div>
           <div class="mt-8 lg:mt-0 lg:w-5/12">
-            <div class="bg-orange-100 dark:bg-orange-900/30 p-8 rounded-2xl border border-orange-200 dark:border-orange-800">
-              <h3 class="text-xl font-bold text-orange-800 dark:text-orange-300 mb-2">The <span data-bind="businessName">...</span> Promise</h3>
-              <ul class="space-y-4 text-orange-900 dark:text-orange-100 font-medium mt-4">
+            <div class="bg-gradient-to-br from-orange-100 to-pink-100 dark:from-indigo-900/40 dark:to-purple-900/40 p-8 rounded-2xl border border-orange-200 dark:border-indigo-500/30 shadow-xl">
+              <h3 class="text-xl font-bold text-orange-900 dark:text-purple-300 mb-2">The <span data-bind="businessName">...</span> Promise</h3>
+              <ul class="space-y-4 text-orange-950 dark:text-indigo-100 font-medium mt-4">
                 <li class="flex items-center"><span class="mr-3 text-2xl">✨</span> Immaculate Restrooms</li>
                 <li class="flex items-center"><span class="mr-3 text-2xl">⚡</span> Fast, Top-Tier Fuel</li>
                 <li class="flex items-center"><span class="mr-3 text-2xl">🍔</span> Freshly Made Food</li>
@@ -165,39 +166,40 @@
     </section>
 
     <!-- Component: Social Proof -->
-    <section class="py-16 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 reveal-on-scroll">
+    <section class="py-16 bg-orange-50/50 dark:bg-indigo-950 border-t border-orange-100 dark:border-indigo-900 reveal-on-scroll">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-center text-3xl font-bold text-slate-900 dark:text-white mb-12">What Travelers Are Saying</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-            <div class="flex text-orange-500 mb-4">★★★★★</div>
-            <p class="text-slate-600 dark:text-slate-300 italic">"By far the cleanest restrooms on this stretch of the highway. Always my go-to stop when driving through."</p>
+          <div class="bg-white dark:bg-indigo-900/40 p-6 rounded-xl shadow-md border border-orange-100 dark:border-indigo-500/20 hover:shadow-lg transition-shadow">
+            <div class="flex text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500 mb-4 text-xl">★★★★★</div>
+            <p class="text-slate-600 dark:text-indigo-200 italic">"By far the cleanest restrooms on this stretch of the highway. Always my go-to stop when driving through."</p>
             <p class="mt-4 font-bold text-slate-900 dark:text-white">- Sarah T., Local Guide</p>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-            <div class="flex text-orange-500 mb-4">★★★★★</div>
-            <p class="text-slate-600 dark:text-slate-300 italic">"The breakfast sandwiches are legitimately incredible. Better than most fast food places, and the coffee is always fresh."</p>
+          <div class="bg-white dark:bg-indigo-900/40 p-6 rounded-xl shadow-md border border-orange-100 dark:border-indigo-500/20 hover:shadow-lg transition-shadow">
+            <div class="flex text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500 mb-4 text-xl">★★★★★</div>
+            <p class="text-slate-600 dark:text-indigo-200 italic">"The breakfast sandwiches are legitimately incredible. Better than most fast food places, and the coffee is always fresh."</p>
             <p class="mt-4 font-bold text-slate-900 dark:text-white">- Mike R.</p>
           </div>
-          <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700">
-            <div class="flex text-orange-500 mb-4">★★★★★</div>
-            <p class="text-slate-600 dark:text-slate-300 italic">"Bright, well-lit, and very safe feeling at night. The staff is incredibly friendly."</p>
+          <div class="bg-white dark:bg-indigo-900/40 p-6 rounded-xl shadow-md border border-orange-100 dark:border-indigo-500/20 hover:shadow-lg transition-shadow">
+            <div class="flex text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500 mb-4 text-xl">★★★★★</div>
+            <p class="text-slate-600 dark:text-indigo-200 italic">"Bright, well-lit, and very safe feeling at night. The staff is incredibly friendly."</p>
             <p class="mt-4 font-bold text-slate-900 dark:text-white">- Elena V.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="bg-slate-900 pt-12 pb-8 border-t border-slate-800">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer class="bg-indigo-950 pt-12 pb-8 border-t border-indigo-900 relative overflow-hidden">
+      <div class="absolute inset-0 bg-gradient-to-t from-indigo-950 to-transparent pointer-events-none"></div>
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="flex flex-col md:flex-row justify-between items-center mb-8">
           <div class="mb-4 md:mb-0">
-            <span class="font-extrabold text-xl tracking-tight text-white" data-bind="businessName">...</span>
-            <p class="text-slate-400 mt-2 text-sm max-w-sm" data-bind="address">...</p>
+            <span class="font-extrabold text-xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-500" data-bind="businessName">...</span>
+            <p class="text-indigo-300 mt-2 text-sm max-w-sm" data-bind="address">...</p>
           </div>
         </div>
-        <div class="border-t border-slate-800 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
-          <p class="text-slate-500 text-sm">
+        <div class="border-t border-indigo-900/50 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center">
+          <p class="text-indigo-400 text-sm">
             &copy; <span data-bind="currentYear">...</span> <span data-bind="businessName">...</span>. All rights reserved.
           </p>
         </div>
@@ -205,9 +207,9 @@
     </footer>
     
     <!-- Mobile Bottom Navigation -->
-    <nav class="md:hidden fixed bottom-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-50 pb-safe">
+    <nav class="md:hidden fixed bottom-0 w-full bg-white dark:bg-indigo-950 border-t border-orange-100 dark:border-indigo-900 z-50 pb-safe shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
       <div class="flex justify-around items-center h-16">
-        <a href="/" class="flex flex-col items-center justify-center w-full h-full text-slate-500 dark:text-slate-400 hover:text-orange-500 dark:hover:text-orange-400 transition-colors">
+        <a href="/" class="flex flex-col items-center justify-center w-full h-full text-indigo-400 dark:text-indigo-300 hover:text-pink-500 transition-colors">
           <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
           <span class="text-[10px] font-bold uppercase tracking-wider">Home</span>
         </a>
