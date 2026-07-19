@@ -1,9 +1,10 @@
 export const fallbackData = {
-  "businessName": "Express Roadside Stop",
+  "businessName": "4-Way Quick Stop",
+  "announcement": "Welcome to 4-Way Quick Stop! Your express stop for all needs.",
   "phone": "(555) 019-2834",
-  "address": "100 Interstate Highway 10, Houston, TX 77001",
-  "storeHours": "Open 24 Hours",
-  "foodHours": "6:00 AM - 9:00 PM",
+  "address": "14255 AL-69, Joppa, AL 35087, USA",
+  "storeHours": "4 AM to 11 PM",
+  "foodHours": "9 AM to 11 PM",
   "fuel": {
     "regular": "3.39",
     "premium": "3.84",
