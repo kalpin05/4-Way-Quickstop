@@ -203,11 +203,11 @@ function setupFoodFilters() {
   });
 
   // Rebuild container
-  let buttonsHtml = `<button data-filter="all" class="px-6 py-2 rounded-full text-sm font-bold bg-orange-600 text-white shadow-md transition-all">All Items</button>`;
+  let buttonsHtml = `<button data-filter="all" class="px-6 py-2 rounded-full text-sm font-bold bg-orange-500 text-white border border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-all">All Items</button>`;
   
   Array.from(categories).sort().forEach(cat => {
     const formattedCat = cat.charAt(0).toUpperCase() + cat.slice(1);
-    buttonsHtml += `<button data-filter="${cat}" class="px-6 py-2 rounded-full text-sm font-bold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all">${formattedCat}</button>`;
+    buttonsHtml += `<button data-filter="${cat}" class="px-6 py-2 rounded-full text-sm font-bold bg-white/10 backdrop-blur-md text-white/80 border border-white/20 hover:border-orange-500 hover:text-white hover:bg-orange-500/20 transition-all">${formattedCat}</button>`;
   });
   
   filterContainer.innerHTML = buttonsHtml;
@@ -229,9 +229,9 @@ function setupFoodFilters() {
       
       // Update active button styling
       filterContainer.querySelectorAll('button').forEach(b => {
-        b.className = 'px-6 py-2 rounded-full text-sm font-bold bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all';
+        b.className = 'px-6 py-2 rounded-full text-sm font-bold bg-white/10 backdrop-blur-md text-white/80 border border-white/20 hover:border-orange-500 hover:text-white hover:bg-orange-500/20 transition-all';
       });
-      btn.className = 'px-6 py-2 rounded-full text-sm font-bold bg-orange-600 text-white shadow-md transition-all';
+      btn.className = 'px-6 py-2 rounded-full text-sm font-bold bg-orange-500 text-white border border-orange-400 shadow-[0_0_15px_rgba(249,115,22,0.5)] transition-all';
       
       renderFoodItems(window.latestFoodItems || [], window.currentFoodCategory, window.currentFoodQuery);
     }
