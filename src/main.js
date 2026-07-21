@@ -585,6 +585,9 @@ export async function initApp(isInitial = true) {
   // Initialize interactive map if container exists (Location page)
   initLocationMap();
 
+  // Update active navigation links
+  updateActiveNavLinks();
+
   if (isInitial) {
     // Set up 5 minute polling
     setInterval(() => {
@@ -598,6 +601,41 @@ export async function initApp(isInitial = true) {
   window.initMagneticButtons();
 
   console.log('[Main] Application initialization complete');
+}
+
+export function updateActiveNavLinks() {
+  let currentPath = window.location.pathname;
+  if (currentPath === '' || currentPath === '/index.html') currentPath = '/';
+  
+  // Header Desktop links
+  document.querySelectorAll('header nav a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    if (!href.startsWith('/')) href = '/' + href;
+    
+    if (href === currentPath) {
+      link.classList.add('text-orange-400');
+      link.classList.remove('text-slate-300');
+    } else {
+      link.classList.remove('text-orange-400');
+      link.classList.add('text-slate-300');
+    }
+  });
+
+  // Mobile Footer links
+  document.querySelectorAll('nav.fixed.bottom-0 a').forEach(link => {
+    let href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    if (!href.startsWith('/')) href = '/' + href;
+    
+    if (href === currentPath) {
+      link.classList.add('text-orange-400');
+      link.classList.remove('text-slate-500', 'dark:text-slate-400');
+    } else {
+      link.classList.remove('text-orange-400');
+      link.classList.add('text-slate-500', 'dark:text-slate-400');
+    }
+  });
 }
 
 function initLocationMap() {
