@@ -1,6 +1,7 @@
 import './style.css';
 import { fetchStoreData, populateDOM, fetchFoodData, debugGoogleSheets } from './utils/dataFetcher.js';
 import { initRouter } from './router.js';
+import { registerSW } from 'virtual:pwa-register';
 
 // Theme Toggle Logic
 function initTheme() {
@@ -784,14 +785,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initCustomDropdowns();
 });
 
-// Register Service Worker for background syncing and PWA offline capabilities
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then(registration => {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, err => {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
+// Register Vite PWA Service Worker
+const updateSW = registerSW({
+  onNeedRefresh() {
+    console.log('[PWA] New content available, click on reload button to update.');
+  },
+  onOfflineReady() {
+    console.log('[PWA] App is ready to work offline.');
+  },
+});
 
