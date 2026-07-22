@@ -23,7 +23,7 @@ export function escapeHTML(str) {
 const urlParams = new URLSearchParams(window.location.search);
 const forceRefresh = urlParams.has('refresh');
 
-export async function fetchWithCache(url, cacheKey, ttlMs = 120000) {
+export async function fetchWithCache(url, cacheKey, ttlMs = 60000) {
   const cached = localStorage.getItem(cacheKey);
   if (cached && !forceRefresh) {
     try {
